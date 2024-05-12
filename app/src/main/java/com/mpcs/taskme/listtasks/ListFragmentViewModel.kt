@@ -15,4 +15,8 @@ class ListFragmentViewModel: ViewModel() {
         taskRepository.deleteTask(task)
     }
 
+    fun updateTask(task: Task){
+        taskRepository.updateTask(task)
+    }
+
 }
