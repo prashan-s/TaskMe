@@ -95,9 +95,9 @@ class CompletedFragment : Fragment() {
     private fun updateOverview(listSize: Int) {
         lateinit var overviewString:String
         if(listSize == 0){
-           overviewString = getString(R.string.all_completed)
+           overviewString = "You haven't completed any tasks"
         }else{
-            overviewString = getString(R.string.overview, listSize.toString())
+            overviewString = getString(R.string.completed_count, listSize.toString())
         }
         subTitle.text = overviewString
     }

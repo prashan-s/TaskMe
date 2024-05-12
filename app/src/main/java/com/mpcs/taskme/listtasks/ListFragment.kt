@@ -78,7 +78,7 @@ class ListFragment : Fragment() {
             val fragment = CompletedFragment()
             parentFragmentManager
                 .beginTransaction()
-                .addSharedElement(it, "completed_list")
+//                .addSharedElement(it, "completed_list")
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()

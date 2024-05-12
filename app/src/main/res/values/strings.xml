@@ -29,5 +29,6 @@
     <string name="completed_tasks">Completed Tasks</string>
     <string name="see_completed">See Completed</string>
 
+    <string name="completed_count">%s Completed!</string>
 
 </resources>
