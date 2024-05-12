@@ -22,6 +22,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import java.util.*
 
 const val DATE_FORMAT = "EEEE, MMM, dd, yyyy"
@@ -84,7 +85,31 @@ class ListFragment : Fragment() {
                 .commit()
         }
 
-        // Inflate the layout for this fragment
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                // this method is called
+                // when the item is moved.
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // this method is called when we swipe our item to right direction.
+                // on below line we are getting the item at a particular position.
+                val position = viewHolder.adapterPosition
+                val task = taskListViewModel.taskList.value?.get(position)
+
+                task?.let {
+                    taskListViewModel.deleteItem(task)
+                }
+
+            }
+
+        }).attachToRecyclerView(taskRecyclerView)
+
         return view
     }
 
