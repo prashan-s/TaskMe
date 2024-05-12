@@ -1,5 +1,8 @@
 package com.mpcs.taskme.addtasks
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,10 +18,13 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.mpcs.taskme.DatePickerFragment
 import android.text.format.DateFormat
 import android.util.Log
+import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -39,7 +45,6 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var dateTextView: TextView
     private lateinit var saveButton: Button
     private lateinit var cancelButton: Button
-    private lateinit var notificationButton: ImageButton
     private lateinit var prioritySelect: TextView
     private lateinit var priorityIndicator: ImageView
     private lateinit var addTaskLayout: ConstraintLayout
@@ -59,12 +64,60 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         dateTextView = view.findViewById(R.id.taskDate)
         titleInput = view.findViewById(R.id.titleTextInput)
         descInput = view.findViewById(R.id.descTextInput)
-        notificationButton = view.findViewById(R.id.notificationButton)
         prioritySelect = view.findViewById(R.id.prioritySelect)
         priorityIndicator = view.findViewById(R.id.priorityIndicator)
         addTaskLayout = view.findViewById(R.id.addtasklayout)
 
+        val constraintLayout: ConstraintLayout = addTaskLayout
+        val rootView:View = addTaskLayout
+        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            rootView.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            if (keypadHeight > screenHeight * 0.15) {
+                // Keyboard is open
+                moveButtonAboveKeyboard(constraintLayout, saveButton, keypadHeight)
+                moveButtonAboveKeyboard(constraintLayout, cancelButton, keypadHeight)
+            } else {
+                // Keyboard is closed
+                resetButtonPosition(constraintLayout, saveButton)
+                resetButtonPosition(constraintLayout, cancelButton)
+            }
+        }
+
         return view
+    }
+
+    fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = requireActivity().currentFocus
+        view?.let {
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
+    }
+
+    private fun moveButtonAboveKeyboard(constraintLayout: ConstraintLayout, button: View, keypadHeight: Int) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        // Move the button up by the height of the keyboard plus some margin
+        constraintSet.clear(button.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(button.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, keypadHeight + 100)
+
+        constraintSet.applyTo(constraintLayout)
+    }
+
+    private fun resetButtonPosition(constraintLayout: ConstraintLayout, button: View) {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        // Reset the button to its original position
+        constraintSet.clear(button.id, ConstraintSet.BOTTOM)
+        constraintSet.connect(button.id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 8)
+
+        constraintSet.applyTo(constraintLayout)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,26 +166,7 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         dateTextView.setOnClickListener {
             DatePickerFragment.newInstance(addFragmentViewModel.currentTask.dueDate).apply {
                 setTargetFragment(this@AddFragment, RETURN_DATE)
-                show(this@AddFragment.requireFragmentManager(), DIALOG_DATE)
-            }
-        }
-
-        notificationButton.setOnClickListener {
-            addFragmentViewModel.currentTask.notification = !addFragmentViewModel.currentTask.notification
-            if(addFragmentViewModel.currentTask.notification){
-                notificationButton.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_notifications
-                    )
-                )
-            }else{
-                notificationButton.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_notifications_none
-                    )
-                )
+                show(this@AddFragment.parentFragmentManager, DIALOG_DATE)
             }
         }
 
@@ -153,6 +187,7 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         }
 
         saveButton.setOnClickListener {
+            hideKeyboard()
             if(addFragmentViewModel.currentTask.title.isEmpty()){
                 Snackbar.make(addTaskLayout, NO_TITLE_TEXT, Snackbar.LENGTH_SHORT)
                 .show()
@@ -160,9 +195,11 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
                 addFragmentViewModel.addTask(addFragmentViewModel.currentTask)
                 parentFragmentManager.popBackStack()
             }
+
         }
 
         cancelButton.setOnClickListener{
+            hideKeyboard()
             parentFragmentManager.popBackStack()
         }
 
@@ -180,17 +217,17 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         updatePriority()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updatePriority() {
         if(addFragmentViewModel.currentTask.priorty == 0){
-            prioritySelect.setText("Low")
+            prioritySelect.text = "Low"
             priorityIndicator.setImageResource(R.drawable.ic_prio_low)
         }else if(addFragmentViewModel.currentTask.priorty == 1){
-            prioritySelect.setText("Medium")
+            prioritySelect.text = "Medium"
             priorityIndicator.setImageResource(R.drawable.ic_prio_medium)
         }else {
-            prioritySelect.setText("High")
+            prioritySelect.text = "High"
             priorityIndicator.setImageResource(R.drawable.ic_prio_high)
         }
-
     }
 }
