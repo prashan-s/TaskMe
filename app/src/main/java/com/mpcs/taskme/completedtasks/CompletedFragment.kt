@@ -111,7 +111,7 @@ class CompletedFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskHolder {
-            val view = layoutInflater.inflate(R.layout.task_list_item, parent, false)
+            val view = layoutInflater.inflate(R.layout.task_completed_item, parent, false)
             return TaskHolder(view)
         }
 
