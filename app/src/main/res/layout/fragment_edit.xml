@@ -81,21 +81,8 @@
         android:background="?attr/selectableItemBackground"
         app:layout_constraintBottom_toTopOf="@id/priorityTitle"
         app:layout_constraintTop_toBottomOf="@id/taskDateTitle"
-        app:layout_constraintRight_toLeftOf="@id/notificationButton"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:text="JUNE 9th, 2020" />
-
-    <ImageButton
-        android:id="@+id/notificationButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:backgroundTint="@color/mainBackground"
-        android:tint="@color/mainText"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/titleTextField"
-        app:layout_constraintBottom_toTopOf="@id/priorityTitle"
-        android:src="@drawable/ic_notifications_none"/>
 
     <TextView
         android:id="@+id/priorityTitle"
