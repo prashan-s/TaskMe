@@ -7,14 +7,14 @@ import java.util.*
 
 @Dao
 interface TasksDao {
-    @Query("SELECT * FROM task")
-    fun getTasks(): LiveData<List<Task>>
+    @Query("SELECT * FROM task WHERE completed = :isCompleted ORDER BY priorty DESC, dueDate DESC")
+    fun getTasks(isCompleted: Boolean = false): LiveData<List<Task>>
 
     @Query("SELECT * FROM task WHERE id=(:id)")
     fun getTaskFromId(id: UUID): LiveData<Task?>
 
-    @Query("SELECT COUNT(*) FROM task")
-    fun getCount(): LiveData<Int>
+    @Query("SELECT COUNT(*) FROM task WHERE completed = :isCompleted")
+    fun getCount(isCompleted: Boolean = false): LiveData<Int>
 
     @Update
     fun updateTask(task: Task)

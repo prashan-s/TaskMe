@@ -18,7 +18,9 @@ import com.mpcs.taskme.R
 import com.mpcs.taskme.addtasks.AddFragment
 import com.mpcs.taskme.models.Task
 import android.text.format.DateFormat
+import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import java.util.*
 
@@ -32,6 +34,7 @@ class ListFragment : Fragment() {
 
     private var callbacks: Callbacks? = null
     private lateinit var fabButton: FloatingActionButton
+    private lateinit var seeCompleted: Button
     private lateinit var taskRecyclerView: RecyclerView
     private lateinit var subTitle: TextView
     private var adapter: TaskAdapter? = TaskAdapter(emptyList())
@@ -59,13 +62,23 @@ class ListFragment : Fragment() {
 
         subTitle = view.findViewById(R.id.subtitle)
 
-        //TODO Move to callback into mainactivity?
         fabButton = view.findViewById(R.id.floating_action_button)
         fabButton.setOnClickListener {
             val fragment = AddFragment()
             parentFragmentManager
                 .beginTransaction()
                 .addSharedElement(it, "list_to_add")
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        seeCompleted = view.findViewById(R.id.see_completed)
+        seeCompleted.setOnClickListener {
+            val fragment = CompletedFragment()
+            parentFragmentManager
+                .beginTransaction()
+                .addSharedElement(it, "completed_list")
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
@@ -78,14 +91,6 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = (requireActivity() as AppCompatActivity)
-        //activity.setSupportActionBar(bottomAppBar)
-
-//        bottomAppBar.setNavigationOnClickListener {
-//            val bottomSheet = NavigationBottomDialogFragment()
-//            bottomSheet.show(activity.supportFragmentManager, "TAG")
-//        }
-
-
         taskListViewModel.taskList.observe(viewLifecycleOwner,
             Observer { tasks ->
             tasks?.let {
@@ -116,11 +121,13 @@ class ListFragment : Fragment() {
     }
 
     private fun updateOverview(listSize: Int) {
-        var overviewString = getString(R.string.overview, listSize.toString())
+        lateinit var overviewString:String
         if(listSize == 0){
-            overviewString += " Nice Job!"
+           overviewString = getString(R.string.all_completed)
+        }else{
+            overviewString = getString(R.string.overview, listSize.toString())
         }
-        subTitle.setText(overviewString)
+        subTitle.text = overviewString
     }
 
 
@@ -135,6 +142,7 @@ class ListFragment : Fragment() {
             val view = layoutInflater.inflate(R.layout.task_list_item, parent, false)
             return TaskHolder(view)
         }
+
     }
 
 
@@ -144,13 +152,14 @@ class ListFragment : Fragment() {
 
         val taskTitleView: TextView = itemView.findViewById(R.id.task_title)
         val dateTextView: TextView = itemView.findViewById(R.id.task_date)
-        val priorityTextView: TextView = itemView.findViewById(R.id.task_priority)
+        val priorityIndicator: ImageView = itemView.findViewById(R.id.priorityIndicator)
         val taskCheckBox: CheckBox = itemView.findViewById(R.id.task_checkbox)
 
         init{
             itemView.setOnClickListener(this)
             taskCheckBox.setOnClickListener {
-                taskListViewModel.deleteItem(task)
+                task.completed = true
+                taskListViewModel.updateTask(task)
             }
         }
 
@@ -158,8 +167,22 @@ class ListFragment : Fragment() {
             this.task = task
             taskTitleView.text = this.task.title
             dateTextView.text = DateFormat.format(DATE_FORMAT, this.task.dueDate)
-//            priorityTextView.text = this.task.priorty
+            updatePriority(this.task.priorty)
             itemView.transitionName = task.id.toString()
+        }
+
+        private fun updatePriority(priority:Int) {
+            when (priority) {
+                0 -> {
+                    priorityIndicator.setImageResource(R.drawable.ic_prio_low)
+                }
+                1 -> {
+                    priorityIndicator.setImageResource(R.drawable.ic_prio_medium)
+                }
+                else -> {
+                    priorityIndicator.setImageResource(R.drawable.ic_prio_high)
+                }
+            }
         }
 
         override fun onClick(v: View?) {

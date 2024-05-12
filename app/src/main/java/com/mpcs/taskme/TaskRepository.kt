@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.mpcs.taskme.database.TasksDao
 import com.mpcs.taskme.database.TasksDatabase
 import com.mpcs.taskme.database.migration_1_2
+import com.mpcs.taskme.database.migration_1_3
 import com.mpcs.taskme.models.Task
 import java.util.*
 import java.util.concurrent.Executors
@@ -19,17 +20,17 @@ class TaskRepository private constructor(context: Context){
         context.applicationContext,
         TasksDatabase::class.java,
         DATABASE_NAME
-    ).addMigrations(migration_1_2).build()
+    ).addMigrations(migration_1_2).addMigrations(migration_1_3).build()
 
     private val taskDao: TasksDao = database.tasksDao()
     private val executor = Executors.newSingleThreadExecutor()
 
 
-    fun getTasks(): LiveData<List<Task>> = taskDao.getTasks()
+    fun getTasks(isCompleted: Boolean = false): LiveData<List<Task>> = taskDao.getTasks(isCompleted)
 
     fun getTaskFromId(id: UUID): LiveData<Task?> = taskDao.getTaskFromId(id)
 
-    fun getCount(): LiveData<Int> = taskDao.getCount()
+    fun getCount(isCompleted: Boolean = false): LiveData<Int> = taskDao.getCount(isCompleted)
 
     fun updateTask(task: Task) {
         executor.execute {
