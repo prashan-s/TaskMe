@@ -23,8 +23,11 @@
     <string name="edit_title">Edit this task</string>
     <string name="edit_date_title">Task Date</string>
 
-    <string name="overview">You have %s tasks to finish.</string>
-
+    <string name="overview">%s Remaining!</string>
+    <string name="all_completed">Great job!\nYou\'ve completed all your tasks!</string>
+    <string name="fragment_list_todo">TODO</string>
+    <string name="completed_tasks">Completed Tasks</string>
+    <string name="see_completed">See Completed</string>
 
 
 </resources>
