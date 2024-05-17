@@ -190,11 +190,14 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         saveButton.setOnClickListener {
             hideKeyboard()
             if(addFragmentViewModel.currentTask.title.isEmpty()){
+                Snackbar.make(addTaskLayout, NO_TITLE_TEXT, Snackbar.LENGTH_SHORT)
+                .show()
+            }else{
                 val toast = Toast.makeText(context, "Task Added!", Toast.LENGTH_SHORT)
                 toast.show()
-            }else{
                 addFragmentViewModel.addTask(addFragmentViewModel.currentTask)
                 parentFragmentManager.popBackStack()
+
             }
 
         }
