@@ -101,7 +101,7 @@ class ListFragment : Fragment() {
 
                 task?.let {
                     taskListViewModel.deleteItem(task)
-                    val toast = Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT)
+                    val toast = Toast.makeText(context, "Task Deleted!", Toast.LENGTH_SHORT)
                     toast.show()
                 }
 

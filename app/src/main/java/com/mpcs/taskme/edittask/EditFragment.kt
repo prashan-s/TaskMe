@@ -222,7 +222,7 @@ class EditFragment : Fragment(), DatePickerFragment.Callbacks {
 
             editFragmentViewModel.saveTask(task)
             hideKeyboard()
-            val toast = Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT)
+            val toast = Toast.makeText(context, "Task Updated!", Toast.LENGTH_SHORT)
             toast.show()
             lifecycleScope.launch {
                 delay(300)

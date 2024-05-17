@@ -22,6 +22,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -189,8 +190,8 @@ class AddFragment : Fragment(), DatePickerFragment.Callbacks {
         saveButton.setOnClickListener {
             hideKeyboard()
             if(addFragmentViewModel.currentTask.title.isEmpty()){
-                Snackbar.make(addTaskLayout, NO_TITLE_TEXT, Snackbar.LENGTH_SHORT)
-                .show()
+                val toast = Toast.makeText(context, "Task Added!", Toast.LENGTH_SHORT)
+                toast.show()
             }else{
                 addFragmentViewModel.addTask(addFragmentViewModel.currentTask)
                 parentFragmentManager.popBackStack()
