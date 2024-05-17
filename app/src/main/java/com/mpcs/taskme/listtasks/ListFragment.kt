@@ -79,7 +79,7 @@ class ListFragment : Fragment() {
             val fragment = CompletedFragment()
             parentFragmentManager
                 .beginTransaction()
-//                .addSharedElement(it, "completed_list")
+                .addSharedElement(it, "list_to_add")
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
@@ -91,14 +91,10 @@ class ListFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // this method is called
-                // when the item is moved.
                 return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // this method is called when we swipe our item to right direction.
-                // on below line we are getting the item at a particular position.
                 val position = viewHolder.adapterPosition
                 val task = taskListViewModel.taskList.value?.get(position)
 
