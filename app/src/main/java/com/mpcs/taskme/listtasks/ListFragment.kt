@@ -21,6 +21,7 @@ import android.text.format.DateFormat
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import java.util.*
@@ -79,7 +80,7 @@ class ListFragment : Fragment() {
             val fragment = CompletedFragment()
             parentFragmentManager
                 .beginTransaction()
-                .addSharedElement(it, "list_to_add")
+                //.addSharedElement(it, "list_to_add")
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit()
@@ -100,6 +101,8 @@ class ListFragment : Fragment() {
 
                 task?.let {
                     taskListViewModel.deleteItem(task)
+                    val toast = Toast.makeText(context, "Task Deleted", Toast.LENGTH_SHORT)
+                    toast.show()
                 }
 
             }

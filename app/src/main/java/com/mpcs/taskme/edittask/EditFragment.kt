@@ -20,6 +20,7 @@ import android.text.format.DateFormat
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -221,6 +222,8 @@ class EditFragment : Fragment(), DatePickerFragment.Callbacks {
 
             editFragmentViewModel.saveTask(task)
             hideKeyboard()
+            val toast = Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT)
+            toast.show()
             lifecycleScope.launch {
                 delay(300)
                 parentFragmentManager.popBackStack()
