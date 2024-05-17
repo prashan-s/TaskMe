@@ -32,6 +32,8 @@
         android:layout_marginLeft="20dp"
         tools:text="Test Test" />
 
+
+
     <TextView
         android:id="@+id/task_date"
         android:layout_width="0dp"

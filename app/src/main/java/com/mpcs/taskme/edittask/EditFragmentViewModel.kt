@@ -16,7 +16,6 @@ class EditFragmentViewModel: ViewModel() {
         taskRepository.getTaskFromId(taskId)
     }
 
-
     fun loadTask(taskId: UUID) {
         taskIdLiveData.value = taskId
     }

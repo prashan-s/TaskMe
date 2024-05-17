@@ -10,7 +10,7 @@
     <color name="mainText">#1C1F27</color>
     <color name="altText">#2D323F</color>
 
-    <color name="mainBackground">#FFFFFF</color>
+    <color name="mainBackground">#E3E3E3</color>
 
     <color name="cancelred">#ea5455</color>
     <color name="mainGreen">#3DDC84</color>
