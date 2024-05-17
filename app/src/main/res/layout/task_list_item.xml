@@ -28,7 +28,7 @@
         app:layout_constraintLeft_toRightOf="@id/task_checkbox"
         app:layout_constraintRight_toLeftOf="@id/priorityIndicator"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Release Mintask to Play Store" />
+        tools:text="Test Test" />
 
     <TextView
         android:id="@+id/task_date"
@@ -42,7 +42,7 @@
         app:layout_constraintLeft_toRightOf="@id/task_checkbox"
         app:layout_constraintRight_toLeftOf="@id/priorityIndicator"
         app:layout_constraintTop_toBottomOf="@id/task_title"
-        tools:text="June 30, 2020" />
+        tools:text="May 12, 2024" />
 
     <ImageView
         android:id="@+id/priorityIndicator"
